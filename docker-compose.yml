@@ -1,0 +1,32 @@
+version: "3.4"
+
+services:
+  web:
+    image: httpd:latest
+    volumes:
+      - ./web/bin:/usr/local/apache2/htdocs 
+    ports:
+      - 80:80
+      
+  db:
+    image: surrealdb/surrealdb:latest
+    command: start --log info --user root --pass pass file:/mydata
+    ports:
+      - 8000
+
+  api:
+    build: api
+    healthcheck:
+      test: "exit 0"
+    command: sh -c "/wait && python app.py"
+    environment:
+      - WAIT_HOSTS=db:8000
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+    depends_on:
+      - db
+    links:
+      - "db:db"
+    ports:
+      - "81:5000"

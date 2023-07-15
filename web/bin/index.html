@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>HTMX Get web service</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <style>
+      .header {font-size: medium; font-weight: bold; }
+      .footer {font-style: italic;}
+      .item1 { grid-area: id; }
+      .item2 { grid-area: breed; }
+      .item3 { grid-area: color; }
+
+      .flex-container {
+          display: grid; /* or inline-flex */
+          /*border: 2px seashell;*/
+          grid-template-areas: 'id breed color';
+          gap: 10px;
+          padding: 10px;
+      }
+
+      .flex-container > div {
+          padding: 20px 10px;
+          text-align: center;
+          background-color: cadetblue;
+      }
+    </style>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
+  </head>
+  <body>
+    <!-- this is header -->
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">HTMX Get web service</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" hx-ext="client-side-templates">
+      <button class='btn' hx-get="http://localhost:81/dog"
+            hx-target="#list"
+            mustache-template="doglist" 
+            hx-swap="outerHTML">Show dogs
+      </button>
+      <script id="doglist" type="mustache">
+        <div class="flex-container">
+          <div class="item1 header">Id</div>
+          <div class="item2 header">Breed</div>
+          <div class="item3 header">Color</div>
+        </div>
+        {{#results}}
+        <div class="flex-container">
+          <div class="item1">{{my_id}}</div>
+          <div class="item2">{{breed}}</div>
+          <div class="item3">{{color}}</div>
+        </div>
+        {{/results}}
+        <div class="flex-container">
+          <div class="item1 header footer">Id</div>
+          <div class="item2 header footer">Breed</div>
+          <div class="item3 header footer">Color</div>
+        </div>
+      </script>
+    
+      <div id="list"></div>
+    </div>
+  </body>
+</html>

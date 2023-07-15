@@ -1,0 +1,4 @@
+Flask[async]
+flask-cors
+aioflask
+surrealdb
